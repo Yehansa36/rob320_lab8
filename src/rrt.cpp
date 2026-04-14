@@ -50,8 +50,9 @@ RRT::Path RRT::plan() {
                 path.push_back({current->x, current->y});
                 current = current->parent;
             }
-            path.push_back({goal.x, goal.y});
             std::reverse(path.begin(), path.end());
+            path.push_back({goal.x, goal.y});
+
             return path;
         }
     }
