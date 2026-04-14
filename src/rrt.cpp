@@ -42,7 +42,7 @@ RRT::Path RRT::plan() {
         double dy = goal.y - latest->y;
         double distance = std::sqrt(dx * dx + dy * dy);
 
-        if (distance , step_length) {
+        if (distance < step_length) {
             Path path;
             Tree::Node *current = latest;
 
@@ -50,6 +50,7 @@ RRT::Path RRT::plan() {
                 path.push_back({current->x, current->y});
                 current = current->parent;
             }
+            std::reverse(path.begin(), path.end());
             return path;
         }
     }
@@ -79,8 +80,8 @@ bool RRT::extend(Tree &tree, const Tree::Node &q_rand) const {
 
     }
 
-    int new_x = q_near->x + static_cast<int>(std::ceil(dx));
-    int new_y = q_near->y + static_cast<int>(std::ceil(dy));
+    int new_x = q_near->x + static_cast<int>(std::round(dx));
+    int new_y = q_near->y + static_cast<int>(std::round(dy));
 
     if (!map.is_in_bounds(new_x, new_y) || map.is_obstacle(new_x, new_y)) {
         return false;
