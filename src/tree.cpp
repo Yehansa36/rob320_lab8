@@ -48,8 +48,30 @@ Tree::Node *Tree::get_nearest(const Node &q_new) {
      * distance to q_new. The function should return a pointer to the
      * nearest node.
      */
+    std::vector<Node *> stack;
+    stack.push_back(root);
 
-    return nullptr;
+    Node *nearest = root;
+    double min_distance = std::sqrt(std::pow(root->x - q_new.x, 2) + std::pow(root->y - q_new.y, 2));
+
+    while (!stack.empty()) {
+        Node *current = stack.back();
+        stack.pop_back();
+
+        double distance = std::sqrt(std::pow(current->x - q_new.x, 2) + std::pow(current->y - q_new.y, 2));
+
+        if (distance < min_distance) {
+            min_distance = distance;
+            nearest = current;
+
+        }
+
+        for (Node *child : current->children) {
+            stack.push_back(child);
+        }
+    }
+
+    return nearest;
 }
 
 void Tree::insert(Node *q, const Node &q_new) {
@@ -58,6 +80,12 @@ void Tree::insert(Node *q, const Node &q_new) {
      * the heap and pushed into the children vector of q. q should be assigned
      * as the parent of q_new. Increment the size.
      */
+    Node *new_node = new Node(q_new);
+    new_node->parent = q;
 
+    q->children.push_back(new_node);
+    latest = new_node;
+    size_++;
+    
     return;
 }
